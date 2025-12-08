@@ -1,0 +1,44 @@
+from datetime import datetime
+from typing import Optional, List
+from sqlmodel import SQLModel, Field, Relationship
+
+class BranchBase(SQLModel):
+    name: str = Field(index=True)
+    address: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    radius: float = 100.0  # meters
+
+class Branch(BranchBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    employees: List["Employee"] = Relationship(back_populates="branch")
+
+class EmployeeBase(SQLModel):
+    first_name: str
+    last_name: str
+    employee_number: str = Field(unique=True, index=True)
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    is_active: bool = True
+    face_embedding: Optional[List[float]] = Field(default=None, sa_column_kwargs={"type_": "JSON"}) # Store vector as list
+
+class Employee(EmployeeBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    branch_id: Optional[int] = Field(default=None, foreign_key="branch.id")
+    branch: Optional[Branch] = Relationship(back_populates="employees")
+    attendances: List["Attendance"] = Relationship(back_populates="employee")
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class AttendanceBase(SQLModel):
+    timestamp: datetime
+    type: str  # check-in, check-out
+    status: str # on-time, late, etc
+    confidence_score: Optional[float] = None
+    biometric_verified: bool = False
+
+class Attendance(AttendanceBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    employee_id: int = Field(foreign_key="employee.id")
+    employee: Employee = Relationship(back_populates="attendances")
+    branch_id: int = Field(foreign_key="branch.id")
