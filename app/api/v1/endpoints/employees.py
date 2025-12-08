@@ -12,6 +12,22 @@ def create_employee(employee: EmployeeBase, branch_id: int, session: Session = D
     if not branch:
         raise HTTPException(status_code=404, detail="Branch not found")
     
+    # Check if employee exists
+    statement = select(Employee).where(Employee.employee_number == employee.employee_number)
+    existing_employee = session.exec(statement).first()
+    
+    if existing_employee:
+        # Update existing employee
+        existing_employee.first_name = employee.first_name
+        existing_employee.last_name = employee.last_name
+        existing_employee.is_active = employee.is_active
+        existing_employee.face_embedding = employee.face_embedding
+        existing_employee.branch_id = branch_id
+        session.add(existing_employee)
+        session.commit()
+        session.refresh(existing_employee)
+        return existing_employee
+
     db_employee = Employee.from_orm(employee)
     db_employee.branch_id = branch_id
     session.add(db_employee)
@@ -33,3 +49,12 @@ def read_employee(employee_id: int, session: Session = Depends(get_session)):
     if not employee:
         raise HTTPException(status_code=404, detail="Employee not found")
     return employee
+
+@router.delete("/{employee_id}")
+def delete_employee(employee_id: int, session: Session = Depends(get_session)):
+    employee = session.get(Employee, employee_id)
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+    session.delete(employee)
+    session.commit()
+    return {"ok": True}
