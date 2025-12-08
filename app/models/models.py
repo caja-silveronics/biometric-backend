@@ -1,6 +1,6 @@
-from datetime import datetime
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
+from sqlalchemy import JSON, Column
 
 class BranchBase(SQLModel):
     name: str = Field(index=True)
@@ -20,7 +20,7 @@ class EmployeeBase(SQLModel):
     email: Optional[str] = None
     phone: Optional[str] = None
     is_active: bool = True
-    face_embedding: Optional[List[float]] = Field(default=None, sa_column_kwargs={"type_": "JSON"}) # Store vector as list
+    face_embedding: Optional[List[float]] = Field(default=None, sa_column=Column(JSON)) # Store vector as JSON list
 
 class Employee(EmployeeBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
