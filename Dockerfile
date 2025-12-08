@@ -1,21 +1,19 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Instalar dependencias del sistema
+# Install system dependencies required for building Python packages
 RUN apt-get update && apt-get install -y \
     gcc \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar dependencias de Python
 COPY requirements.txt .
+
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar el código
 COPY . .
 
-# Puerto por defecto de FastAPI
 EXPOSE 8000
 
-# Comando de inicio
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
