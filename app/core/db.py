@@ -25,19 +25,38 @@ def init_db():
             # Employees
             conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS position VARCHAR;"))
             conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS department VARCHAR;"))
-            conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS work_schedule VARCHAR;"))
-            conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS photo_url TEXT;")) # Use TEXT for base64
-            conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS face_embedding JSON;"))
             
-            # Migrate work_schedule to JSON if it exists as VARCHAR (Postgres specific attempt)
-            # This is risky if data is bad, so we wrap it or handle it carefully.
-            # Ideally in dev we can just alter it.
-            try:
-                # Check if we are on postgres to run specific JSON conversion
-                if "postgres" in str(engine.url):
+            # 1. work_schedule
+            # Primero aseguramos que exista
+            conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS work_schedule JSON;")) # Intenta crear como JSON directo
+            
+            # 2. photo_url
+            conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS photo_url TEXT;"))
+            
+            # 3. face_embedding
+            conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS face_embedding JSON;"))
+
+            # FIX: Force ALTER columns to ensure correct types (in case they existed as VARCHAR)
+            if "postgres" in str(engine.url) or "postgresql" in str(engine.url):
+                try:
+                    # Enforce photo_url is TEXT (unlimited length) not VARCHAR
+                    conn.execute(text("ALTER TABLE employee ALTER COLUMN photo_url TYPE TEXT;"))
+                    print("✅ photo_url forced to TEXT")
+
+                    # Enforce work_schedule is JSON. This might fail if data is invalid, so catch it.
+                    # 'USING work_schedule::json' is needed if it was text.
+                    # If it was already JSON, this is a no-op usually or safe.
+                    # If it was empty text '', it fails. Handle that?
+                    # Let's try a safe approach:
                     conn.execute(text("ALTER TABLE employee ALTER COLUMN work_schedule TYPE JSON USING work_schedule::json;"))
-            except Exception as e_json:
-                print(f"⚠️ JSON migration skipped (might be sqlite or bad data): {e_json}")
+                    print("✅ work_schedule forced to JSON")
+
+                    # Enforce face_embedding is JSON.
+                    conn.execute(text("ALTER TABLE employee ALTER COLUMN face_embedding TYPE JSON USING face_embedding::json;"))
+                    print("✅ face_embedding forced to JSON")
+
+                except Exception as e_alter:
+                     print(f"⚠️ Column type enforcement warning: {e_alter}")
 
             conn.commit() 
             print("✅ Schema migrations checked/applied")
