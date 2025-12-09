@@ -10,8 +10,19 @@ if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
 
 engine = create_engine(DATABASE_URL, echo=True)
 
+from sqlalchemy import text
+
 def init_db():
     SQLModel.metadata.create_all(engine)
+    # Manual migration for new columns
+    with engine.connect() as conn:
+        try:
+            conn.execute(text("ALTER TABLE branch ADD COLUMN IF NOT EXISTS phone VARCHAR;"))
+            conn.execute(text("ALTER TABLE branch ADD COLUMN IF NOT EXISTS city VARCHAR;"))
+            conn.commit() 
+            print("✅ Schema migrations checked/applied")
+        except Exception as e:
+            print(f"⚠️ Migration warning: {e}")
 
 def get_session():
     with Session(engine) as session:
