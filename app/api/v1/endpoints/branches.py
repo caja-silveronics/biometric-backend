@@ -13,6 +13,17 @@ def create_branch(branch: BranchBase, session: Session = Depends(get_session)):
     existing_branch = session.exec(statement).first()
     
     if existing_branch:
+        # Update existing branch with new data
+        existing_branch.address = branch.address
+        existing_branch.phone = branch.phone
+        existing_branch.city = branch.city
+        existing_branch.radius = branch.radius
+        existing_branch.latitude = branch.latitude
+        existing_branch.longitude = branch.longitude
+        
+        session.add(existing_branch)
+        session.commit()
+        session.refresh(existing_branch)
         return existing_branch
 
     db_branch = Branch.from_orm(branch)
