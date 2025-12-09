@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Any
 from sqlmodel import SQLModel, Field, Relationship
 from sqlalchemy import JSON, Column
 
@@ -25,7 +25,7 @@ class EmployeeBase(SQLModel):
     phone: Optional[str] = None
     position: Optional[str] = None
     department: Optional[str] = None
-    work_schedule: Optional[dict] = Field(default=None, sa_column=Column(JSON)) # Store full schedule object
+    work_schedule: Optional[Any] = Field(default=None, sa_column=Column(JSON)) # Store full schedule object (relaxed type for legacy data)
     photo_url: Optional[str] = None # Base64 string or URL
     is_active: bool = True
     face_embedding: Optional[List[float]] = Field(default=None, sa_column=Column(JSON)) # Store vector as JSON list
