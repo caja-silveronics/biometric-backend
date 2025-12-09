@@ -20,6 +20,10 @@ def create_employee(employee: EmployeeBase, branch_id: int, session: Session = D
         # Update existing employee
         existing_employee.first_name = employee.first_name
         existing_employee.last_name = employee.last_name
+        existing_employee.position = employee.position
+        existing_employee.department = employee.department
+        existing_employee.work_schedule = employee.work_schedule
+        existing_employee.phone = employee.phone
         existing_employee.is_active = employee.is_active
         existing_employee.face_embedding = employee.face_embedding
         existing_employee.branch_id = branch_id

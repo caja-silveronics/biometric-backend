@@ -17,8 +17,15 @@ def init_db():
     # Manual migration for new columns
     with engine.connect() as conn:
         try:
+            # Branches
             conn.execute(text("ALTER TABLE branch ADD COLUMN IF NOT EXISTS phone VARCHAR;"))
             conn.execute(text("ALTER TABLE branch ADD COLUMN IF NOT EXISTS city VARCHAR;"))
+            
+            # Employees
+            conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS position VARCHAR;"))
+            conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS department VARCHAR;"))
+            conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS work_schedule VARCHAR;"))
+            
             conn.commit() 
             print("✅ Schema migrations checked/applied")
         except Exception as e:

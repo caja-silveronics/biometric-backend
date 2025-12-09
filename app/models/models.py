@@ -22,6 +22,9 @@ class EmployeeBase(SQLModel):
     employee_number: str = Field(unique=True, index=True)
     email: Optional[str] = None
     phone: Optional[str] = None
+    position: Optional[str] = None
+    department: Optional[str] = None
+    work_schedule: Optional[str] = None # e.g. "09:00 - 18:00"
     is_active: bool = True
     face_embedding: Optional[List[float]] = Field(default=None, sa_column=Column(JSON)) # Store vector as JSON list
 
