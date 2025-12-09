@@ -17,6 +17,7 @@ def create_branch(branch: BranchBase, session: Session = Depends(get_session)):
         existing_branch.address = branch.address
         existing_branch.phone = branch.phone
         existing_branch.city = branch.city
+        existing_branch.code = branch.code
         existing_branch.radius = branch.radius
         existing_branch.latitude = branch.latitude
         existing_branch.longitude = branch.longitude

@@ -11,6 +11,7 @@ class BranchBase(SQLModel):
     radius: float = 100.0  # meters
     phone: Optional[str] = None
     city: Optional[str] = None
+    code: Optional[str] = None
 
 class Branch(BranchBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
