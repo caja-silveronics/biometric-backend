@@ -18,14 +18,19 @@ def create_attendance(attendance: AttendanceBase, employee_id: int, branch_id: i
     if not branch:
         raise HTTPException(status_code=404, detail="Branch not found")
 
-    db_attendance = Attendance.from_orm(attendance)
-    db_attendance.employee_id = employee_id
-    db_attendance.branch_id = branch_id
-    
-    session.add(db_attendance)
-    session.commit()
-    session.refresh(db_attendance)
-    return db_attendance
+    try:
+        db_attendance = Attendance.from_orm(attendance)
+        db_attendance.employee_id = employee_id
+        db_attendance.branch_id = branch_id
+        
+        session.add(db_attendance)
+        session.commit()
+        session.refresh(db_attendance)
+        return db_attendance
+    except Exception as e:
+        print(f"❌ Error creating attendance: {e}")
+        # Return 400 instead of 500
+        raise HTTPException(status_code=400, detail=f"Error creating attendance record: {str(e)}")
 
 @router.get("/", response_model=List[Attendance])
 def read_attendances(
