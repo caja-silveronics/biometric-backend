@@ -38,23 +38,28 @@ def create_attendance(attendance: AttendanceCreate, session: Session = Depends(g
         print(f"Duplicate attendance detected/ignored: {employee.first_name} at {attendance.timestamp}")
         return existing
 
-    try:
+     try:
         # Create DB model from Input model
         db_attendance = Attendance.from_orm(attendance)
         
         # TIMEZONE CORRECTION:
-        # The App sends UTC (e.g. 2025-12-09T09:00:00Z).
-        # We want to store LOCAL TIME in the DB (e.g. 2025-12-09T03:00:00).
-        # So we convert the incoming timestamp to local system time.
+        # Force conversion to Mexico City Time (CST/CDT)
+        # Server might be UTC, but we want to store naive local time.
+        import pytz
+        from datetime import timezone
+        
+        target_tz = pytz.timezone('America/Mexico_City')
+
         if db_attendance.timestamp.tzinfo is not None:
-             # Convert aware to local (naive)
-             db_attendance.timestamp = db_attendance.timestamp.astimezone().replace(tzinfo=None)
+             # Convert aware to target timezone
+             db_attendance.timestamp = db_attendance.timestamp.astimezone(target_tz).replace(tzinfo=None)
         else:
-             # Naive input. Assume it is UTC (standard for API JSON).
-             # Convert: Naive(UTC) -> Aware(UTC) -> Convert to Local -> Naive(Local)
-             from datetime import timezone
+             # Naive input. Assume it is UTC (standard for API JSON from Kiosk).
+             # 1. Attach UTC 
              utc_dt = db_attendance.timestamp.replace(tzinfo=timezone.utc)
-             local_dt = utc_dt.astimezone() # System Local Time
+             # 2. Convert to Mexico City
+             local_dt = utc_dt.astimezone(target_tz) 
+             # 3. Strip timezone for naive storage
              db_attendance.timestamp = local_dt.replace(tzinfo=None)
 
         # Explicitly set IDs just in case, though from_orm might handle it if fields match
