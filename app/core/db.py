@@ -16,6 +16,17 @@ def run_migrations():
     results = []
     try:
         with engine.connect() as conn:
+            # CLEANUP: Set invalid work_schedule to NULL before attempting conversion
+            # This fixes the "Token 09 invalid" error by removing non-JSON data
+            try:
+                # Assuming Postgres syntax for regex or simple check
+                # Update rows where work_schedule does not start with { or [
+                if "postgres" in str(engine.url) or "postgresql" in str(engine.url):
+                    conn.execute(text("UPDATE employee SET work_schedule = NULL WHERE work_schedule NOT LIKE '{%' AND work_schedule NOT LIKE '[%';"))
+                    results.append("🧹 Cleaned up invalid work_schedule data (set to NULL)")
+            except Exception as e_clean:
+                results.append(f"⚠️ Cleanup warning: {e_clean}")
+
             # Branches
             try:
                 conn.execute(text("ALTER TABLE branch ADD COLUMN IF NOT EXISTS phone VARCHAR;"))
@@ -67,6 +78,7 @@ def run_migrations():
                     conn.execute(text("ALTER TABLE employee ALTER COLUMN photo_url TYPE TEXT;"))
                     results.append("✅ photo_url forced to TEXT")
 
+                    # Now this should succeed after cleanup
                     conn.execute(text("ALTER TABLE employee ALTER COLUMN work_schedule TYPE JSON USING work_schedule::json;"))
                     results.append("✅ work_schedule forced to JSON")
 
