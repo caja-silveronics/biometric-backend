@@ -38,7 +38,7 @@ def create_attendance(attendance: AttendanceCreate, session: Session = Depends(g
         print(f"Duplicate attendance detected/ignored: {employee.first_name} at {attendance.timestamp}")
         return existing
 
-     try:
+    try:
         # Create DB model from Input model
         db_attendance = Attendance.from_orm(attendance)
         
