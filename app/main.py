@@ -8,9 +8,9 @@ from app.api.v1.api import api_router
 async def lifespan(app: FastAPI):
     try:
         init_db()
-        print("✅ Database initialized successfully")
+        print("Database initialized successfully")
     except Exception as e:
-        print(f"❌ Error initializing database: {e}")
+        print(f"Error initializing database: {e}")
     yield
 
 app = FastAPI(

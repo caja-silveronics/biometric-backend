@@ -35,8 +35,8 @@ class Employee(EmployeeBase, table=True):
     branch_id: Optional[int] = Field(default=None, foreign_key="branch.id")
     branch: Optional[Branch] = Relationship(back_populates="employees")
     attendances: List["Attendance"] = Relationship(back_populates="employee")
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
 
 class AttendanceBase(SQLModel):
     timestamp: datetime
