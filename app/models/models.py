@@ -24,7 +24,8 @@ class EmployeeBase(SQLModel):
     phone: Optional[str] = None
     position: Optional[str] = None
     department: Optional[str] = None
-    work_schedule: Optional[str] = None # e.g. "09:00 - 18:00"
+    work_schedule: Optional[dict] = Field(default=None, sa_column=Column(JSON)) # Store full schedule object
+    photo_url: Optional[str] = None # Base64 string or URL
     is_active: bool = True
     face_embedding: Optional[List[float]] = Field(default=None, sa_column=Column(JSON)) # Store vector as JSON list
 

@@ -25,6 +25,7 @@ def init_db():
             conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS position VARCHAR;"))
             conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS department VARCHAR;"))
             conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS work_schedule VARCHAR;"))
+            conn.execute(text("ALTER TABLE employee ADD COLUMN IF NOT EXISTS photo_url TEXT;")) # Use TEXT for base64
             
             conn.commit() 
             print("✅ Schema migrations checked/applied")

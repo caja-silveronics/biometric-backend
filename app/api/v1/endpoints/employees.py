@@ -23,6 +23,7 @@ def create_employee(employee: EmployeeBase, branch_id: int, session: Session = D
         existing_employee.position = employee.position
         existing_employee.department = employee.department
         existing_employee.work_schedule = employee.work_schedule
+        existing_employee.photo_url = employee.photo_url
         existing_employee.phone = employee.phone
         existing_employee.is_active = employee.is_active
         existing_employee.face_embedding = employee.face_embedding
