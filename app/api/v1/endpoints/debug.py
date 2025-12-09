@@ -1,10 +1,16 @@
-from fastapi import APIRouter
-from app.core.db import run_migrations
+from fastapi import APIRouter, Depends, HTTPException
+from sqlmodel import Session, delete, select
+from app.core.db import get_session
+from app.models.models import Attendance, AttendanceBase, Employee, Branch
 
 router = APIRouter()
 
-@router.get("/migrate", response_model=list[str])
-def debug_run_migrations():
-    """ 手動でマイグレーションを実行する (Force run migrations manually) """
-    logs = run_migrations()
-    return logs
+@router.delete("/clear-all-attendance-danger-zone")
+def clear_all_attendance(key: str, session: Session = Depends(get_session)):
+    if key != "silveronics-secret-key-123":
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    statement = delete(Attendance)
+    result = session.exec(statement)
+    session.commit()
+    return {"status": "ok", "deleted_rows": result.rowcount}
