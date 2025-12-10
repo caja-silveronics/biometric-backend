@@ -1982,3 +1982,64 @@ FROM branch
 2025-12-09 04:17:58,275 INFO sqlalchemy.engine.Engine [cached since 2768s ago] ()
 INFO:     127.0.0.1:59562 - "GET /api/v1/branches/ HTTP/1.1" 200 OK
 2025-12-09 04:17:58,279 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     192.168.1.204:49544 - "GET /api/v1/employees HTTP/1.1" 307 Temporary Redirect
+2025-12-09 04:47:41,033 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-12-09 04:47:41,034 INFO sqlalchemy.engine.Engine SELECT employee.first_name, employee.last_name, employee.employee_number, employee.email, employee.phone, employee.position, employee.department, employee.work_schedule, employee.photo_url, employee.is_active, employee.face_embedding, employee.id, employee.branch_id, employee.created_at, employee.updated_at 
+FROM employee
+2025-12-09 04:47:41,034 INFO sqlalchemy.engine.Engine [cached since 4551s ago] ()
+INFO:     192.168.1.204:49544 - "GET /api/v1/employees/ HTTP/1.1" 200 OK
+2025-12-09 04:47:41,040 INFO sqlalchemy.engine.Engine ROLLBACK
+  2025-12-09 05:04:37,220 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-12-09 05:04:37,221 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("branch")
+2025-12-09 05:04:37,222 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-12-09 05:04:37,223 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("employee")
+2025-12-09 05:04:37,224 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-12-09 05:04:37,225 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("attendance")
+2025-12-09 05:04:37,225 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-12-09 05:04:37,226 INFO sqlalchemy.engine.Engine COMMIT
+2025-12-09 05:04:37,227 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-12-09 05:04:37,227 INFO sqlalchemy.engine.Engine ALTER TABLE branch ADD COLUMN IF NOT EXISTS phone VARCHAR;
+2025-12-09 05:04:37,228 INFO sqlalchemy.engine.Engine [generated in 0.00088s] ()
+2025-12-09 05:04:37,228 INFO sqlalchemy.engine.Engine ALTER TABLE branch ADD COLUMN IF NOT EXISTS city VARCHAR;
+2025-12-09 05:04:37,229 INFO sqlalchemy.engine.Engine [generated in 0.00046s] ()
+2025-12-09 05:04:37,229 INFO sqlalchemy.engine.Engine ALTER TABLE branch ADD COLUMN IF NOT EXISTS code VARCHAR;
+2025-12-09 05:04:37,230 INFO sqlalchemy.engine.Engine [generated in 0.00040s] ()
+2025-12-09 05:04:37,230 INFO sqlalchemy.engine.Engine ALTER TABLE employee ADD COLUMN IF NOT EXISTS position VARCHAR;
+2025-12-09 05:04:37,231 INFO sqlalchemy.engine.Engine [generated in 0.00038s] ()
+2025-12-09 05:04:37,231 INFO sqlalchemy.engine.Engine ALTER TABLE employee ADD COLUMN IF NOT EXISTS department VARCHAR;
+2025-12-09 05:04:37,232 INFO sqlalchemy.engine.Engine [generated in 0.00035s] ()
+2025-12-09 05:04:37,232 INFO sqlalchemy.engine.Engine ALTER TABLE employee ADD COLUMN IF NOT EXISTS work_schedule JSON;
+2025-12-09 05:04:37,232 INFO sqlalchemy.engine.Engine [generated in 0.00039s] ()
+2025-12-09 05:04:37,233 INFO sqlalchemy.engine.Engine ALTER TABLE employee ADD COLUMN IF NOT EXISTS photo_url TEXT;
+2025-12-09 05:04:37,233 INFO sqlalchemy.engine.Engine [generated in 0.00039s] ()
+2025-12-09 05:04:37,234 INFO sqlalchemy.engine.Engine ALTER TABLE employee ADD COLUMN IF NOT EXISTS face_embedding JSON;
+2025-12-09 05:04:37,234 INFO sqlalchemy.engine.Engine [generated in 0.00037s] ()
+2025-12-09 05:04:37,235 INFO sqlalchemy.engine.Engine ROLLBACK
+ Error initializing database: 'charmap' codec can't encode characters in position 0-1: character maps to <undefined>
+2025-12-09 05:14:36,993 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-12-09 05:14:36,993 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("branch")
+2025-12-09 05:14:36,994 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-12-09 05:14:36,996 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("employee")
+2025-12-09 05:14:36,996 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-12-09 05:14:36,997 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("attendance")
+2025-12-09 05:14:36,997 INFO sqlalchemy.engine.Engine [raw sql] ()
+2025-12-09 05:14:36,999 INFO sqlalchemy.engine.Engine COMMIT
+2025-12-09 05:14:37,000 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2025-12-09 05:14:37,001 INFO sqlalchemy.engine.Engine ALTER TABLE branch ADD COLUMN IF NOT EXISTS phone VARCHAR;
+2025-12-09 05:14:37,001 INFO sqlalchemy.engine.Engine [generated in 0.00085s] ()
+2025-12-09 05:14:37,002 INFO sqlalchemy.engine.Engine ALTER TABLE branch ADD COLUMN IF NOT EXISTS city VARCHAR;
+2025-12-09 05:14:37,002 INFO sqlalchemy.engine.Engine [generated in 0.00044s] ()
+2025-12-09 05:14:37,003 INFO sqlalchemy.engine.Engine ALTER TABLE branch ADD COLUMN IF NOT EXISTS code VARCHAR;
+2025-12-09 05:14:37,003 INFO sqlalchemy.engine.Engine [generated in 0.00040s] ()
+2025-12-09 05:14:37,004 INFO sqlalchemy.engine.Engine ALTER TABLE employee ADD COLUMN IF NOT EXISTS position VARCHAR;
+2025-12-09 05:14:37,004 INFO sqlalchemy.engine.Engine [generated in 0.00040s] ()
+2025-12-09 05:14:37,005 INFO sqlalchemy.engine.Engine ALTER TABLE employee ADD COLUMN IF NOT EXISTS department VARCHAR;
+2025-12-09 05:14:37,005 INFO sqlalchemy.engine.Engine [generated in 0.00042s] ()
+2025-12-09 05:14:37,006 INFO sqlalchemy.engine.Engine ALTER TABLE employee ADD COLUMN IF NOT EXISTS work_schedule JSON;
+2025-12-09 05:14:37,006 INFO sqlalchemy.engine.Engine [generated in 0.00039s] ()
+2025-12-09 05:14:37,007 INFO sqlalchemy.engine.Engine ALTER TABLE employee ADD COLUMN IF NOT EXISTS photo_url TEXT;
+2025-12-09 05:14:37,007 INFO sqlalchemy.engine.Engine [generated in 0.00040s] ()
+2025-12-09 05:14:37,008 INFO sqlalchemy.engine.Engine ALTER TABLE employee ADD COLUMN IF NOT EXISTS face_embedding JSON;
+2025-12-09 05:14:37,009 INFO sqlalchemy.engine.Engine [generated in 0.00040s] ()
+2025-12-09 05:14:37,009 INFO sqlalchemy.engine.Engine ROLLBACK
+ 
